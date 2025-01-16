@@ -24,7 +24,7 @@ import { manipulateAsync, SaveFormat } from 'expo-image-manipulator';
 const { height, width } = Dimensions.get('window');
 const screenWidth = Dimensions.get('window').width;
 
-type PostStatus = 'LOST' | 'FOUND' | 'DECEASED';
+type PostStatus = 'Perdid@' | 'Encontrad@' | 'Muert@';
 
 interface Post {
     id: number;
@@ -45,10 +45,10 @@ type EditPostModalProps = {
     onUpdateSuccess?: () => void;
 };
 
-const STATUS_LABELS = {
-    LOST: 'Perdid@',
-    FOUND: 'Encontrad@',
-    DECEASED: 'Muert@'
+const STATUS_LABELS: { [key in PostStatus]: string } = {
+    'Perdid@': 'Perdid@',
+    'Encontrad@': 'Encontrad@',
+    'Muert@': 'Muert@'
 };
 
 const EditPostModal = ({ visible, onClose, post, onUpdateSuccess }: EditPostModalProps) => {
@@ -56,7 +56,7 @@ const EditPostModal = ({ visible, onClose, post, onUpdateSuccess }: EditPostModa
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [image, setImage] = useState('');
-    const [status, setStatus] = useState<PostStatus>('LOST');
+    const [status, setStatus] = useState<PostStatus>('Perdid@');
     const [location, setLocation] = useState<{ latitude: number; longitude: number } | null>(null);
     const [showMap, setShowMap] = useState(false);
     const [locationName, setLocationName] = useState<string>('');
@@ -67,7 +67,7 @@ const EditPostModal = ({ visible, onClose, post, onUpdateSuccess }: EditPostModa
             setTitle(post.title);
             setDescription(post.description);
             setImage(post.image || '');
-            setStatus(post.status || 'LOST');
+            setStatus(post.status || 'Perdid@');
             setLocation(post.location || null);
             if (post.location) {
                 fetchLocationName(post.location);
@@ -106,7 +106,7 @@ const EditPostModal = ({ visible, onClose, post, onUpdateSuccess }: EditPostModa
         setDescription('');
         setImage('');
         setLocation(null);
-        setStatus('LOST');
+        setStatus('Perdid@');
         setLocationName('');
         setShowMap(false);
         onClose();

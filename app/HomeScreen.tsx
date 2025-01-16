@@ -25,6 +25,7 @@ interface Post {
   image: string;
   createdAt: string;
   user: User;
+  status?: string;
   location: {
     latitude: number;
     longitude: number;
@@ -53,7 +54,7 @@ const PostCard: React.FC<{ post: Post }> = ({ post }) => {
             `https://nominatim.openstreetmap.org/reverse?format=json&lat=${post.location.latitude}&lon=${post.location.longitude}&accept-language=es`
           );
           const data = await response.json();
-          
+
           // Construir una descripción de ubicación más amigable
           const parts = [];
           if (data.address) {
@@ -63,7 +64,7 @@ const PostCard: React.FC<{ post: Post }> = ({ post }) => {
               parts.push(data.address.city || data.address.town || data.address.village);
             }
           }
-          
+
           setLocationName(parts.length > 0 ? parts.join(', ') : 'Ubicación desconocida');
         } catch (error) {
           console.error('Error obteniendo ubicación:', error);
@@ -100,6 +101,19 @@ const PostCard: React.FC<{ post: Post }> = ({ post }) => {
               </View>
             )}
           </View>
+          {/* Modificación para mostrar el estado */}
+          {post.status && (
+            <View
+              style={[
+                styles.statusBadge,
+                post.status === 'Perdid@' && styles.statusLost,
+                post.status === 'Encontrad@' && styles.statusFound,
+                post.status === 'Muert@' && styles.statusDeceased
+              ]}
+            >
+              <Text style={styles.statusText}>{post.status}</Text>
+            </View>
+          )}
         </View>
       </View>
       {/* Titulo */}
@@ -136,6 +150,8 @@ const HomeScreen = () => {
       try {
         const fetchedPosts = await fetchPosts();
         setPostes(fetchedPosts);
+
+        console.log(fetchedPosts);
       } catch (error) {
         console.error('Error cargando posts:', error);
       }
@@ -277,6 +293,33 @@ const styles = StyleSheet.create({
   },
   loader: {
     paddingVertical: 20,
+  },
+  statusBadge: {
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 15,
+    marginLeft: 8,
+    alignSelf: 'flex-start',
+  },
+  statusLost: {
+    backgroundColor: '#FFF4E5', // Amarillo claro
+    borderColor: '#FFB300',     // Naranja amarillento
+    borderWidth: 1,
+  },
+  statusFound: {
+    backgroundColor: '#E8F5E9', // Verde muy claro
+    borderColor: '#4CAF50',     // Verde
+    borderWidth: 1,
+  },
+  statusDeceased: {
+    backgroundColor: '#F5F5F5', // Gris muy claro
+    borderColor: '#9E9E9E',     // Gris
+    borderWidth: 1,
+  },
+  statusText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#000',
   },
 });
 

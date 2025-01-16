@@ -3,7 +3,7 @@ import React, { createContext, useContext, useState, useCallback } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { jwtDecode } from 'jwt-decode';
 
-const API_URL = 'http://10.80.3.99:3000';
+const API_URL = 'http://10.80.0.89:3000';
 
 //const API_URL = 'http://192.168.100.13:3000';
 

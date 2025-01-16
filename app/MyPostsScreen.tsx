@@ -24,6 +24,7 @@ interface Post {
   title: string;
   description: string;
   image?: string;
+  status?: string;
   location?: {
     latitude: number;
     longitude: number;
@@ -109,6 +110,19 @@ const PostCard: React.FC<PostCardProps> = ({ post, onDelete, onEdit }) => {
       <View style={styles.postHeader}>
         <View style={styles.userInfo}>
           <Text style={styles.userName}>{post.title}</Text>
+          {/* Modificación para mostrar el estado */}
+          {post.status && (
+            <View
+              style={[
+                styles.statusBadge,
+                post.status === 'Perdid@' && styles.statusLost,
+                post.status === 'Encontrad@' && styles.statusFound,
+                post.status === 'Muert@' && styles.statusDeceased
+              ]}
+            >
+              <Text style={styles.statusText}>{post.status}</Text>
+            </View>
+          )}
           <View style={styles.postMetadata}>
             <Text style={styles.timestamp}>{formatDate(post.createdAt)}</Text>
             {post.location && (
@@ -211,8 +225,8 @@ const MyPostsScreen = () => {
       <FlatList
         data={posts}
         renderItem={({ item }) => (
-          <PostCard 
-            post={item} 
+          <PostCard
+            post={item}
             onDelete={handleDelete}
             onEdit={handleEdit}
           />
@@ -238,14 +252,14 @@ const MyPostsScreen = () => {
       />
       {/* Agregar el Modal */}
       <EditPostModal
-            visible={isEditModalVisible}
-            onClose={() => setIsEditModalVisible(false)}
-            post={selectedPost}
-            onUpdateSuccess={() => {
-                loadPosts();
-                setIsEditModalVisible(false);
-            }}
-        />
+        visible={isEditModalVisible}
+        onClose={() => setIsEditModalVisible(false)}
+        post={selectedPost}
+        onUpdateSuccess={() => {
+          loadPosts();
+          setIsEditModalVisible(false);
+        }}
+      />
     </View>
   );
 };
@@ -362,6 +376,33 @@ const styles = StyleSheet.create({
   emptyText: {
     color: '#666',
     textAlign: 'center',
+  },
+  statusBadge: {
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 15,
+    marginLeft: 8,
+    alignSelf: 'flex-start',
+  },
+  statusLost: {
+    backgroundColor: '#FFF4E5', // Amarillo claro
+    borderColor: '#FFB300',     // Naranja amarillento
+    borderWidth: 1,
+  },
+  statusFound: {
+    backgroundColor: '#E8F5E9', // Verde muy claro
+    borderColor: '#4CAF50',     // Verde
+    borderWidth: 1,
+  },
+  statusDeceased: {
+    backgroundColor: '#F5F5F5', // Gris muy claro
+    borderColor: '#9E9E9E',     // Gris
+    borderWidth: 1,
+  },
+  statusText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#000',
   },
 });
 

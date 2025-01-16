@@ -18,6 +18,7 @@ interface Post {
   description: string;
   image?: string;
   createdAt: string;
+  status?: string;
   user: {
     id: number;
     name: string;
@@ -56,7 +57,7 @@ const PostCard = ({ post }: { post: Post }) => {
             `https://nominatim.openstreetmap.org/reverse?format=json&lat=${post.location.latitude}&lon=${post.location.longitude}&accept-language=es`
           );
           const data = await response.json();
-          
+
           const parts = [];
           if (data.address) {
             if (data.address.road) parts.push(data.address.road);
@@ -65,7 +66,7 @@ const PostCard = ({ post }: { post: Post }) => {
               parts.push(data.address.city || data.address.town || data.address.village);
             }
           }
-          
+
           setLocationName(parts.length > 0 ? parts.join(', ') : 'Ubicación desconocida');
         } catch (error) {
           console.error('Error obteniendo ubicación:', error);
@@ -109,6 +110,19 @@ const PostCard = ({ post }: { post: Post }) => {
       )}
       {post.description && (
         <Text style={styles.description}>{post.description}</Text>
+      )}
+      {/* Modificación para mostrar el estado */}
+      {post.status && (
+        <View
+          style={[
+            styles.statusBadge,
+            post.status === 'Perdid@' && styles.statusLost,
+            post.status === 'Encontrad@' && styles.statusFound,
+            post.status === 'Muert@' && styles.statusDeceased
+          ]}
+        >
+          <Text style={styles.statusText}>{post.status}</Text>
+        </View>
       )}
       {post.image && (
         <Image
@@ -319,6 +333,33 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 300,
     backgroundColor: '#f0f2f5',
+  },
+  statusBadge: {
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 15,
+    marginLeft: 8,
+    alignSelf: 'flex-start',
+  },
+  statusLost: {
+    backgroundColor: '#FFF4E5', // Amarillo claro
+    borderColor: '#FFB300',     // Naranja amarillento
+    borderWidth: 1,
+  },
+  statusFound: {
+    backgroundColor: '#E8F5E9', // Verde muy claro
+    borderColor: '#4CAF50',     // Verde
+    borderWidth: 1,
+  },
+  statusDeceased: {
+    backgroundColor: '#F5F5F5', // Gris muy claro
+    borderColor: '#9E9E9E',     // Gris
+    borderWidth: 1,
+  },
+  statusText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#000',
   },
 });
 
