@@ -5,7 +5,7 @@ import { jwtDecode } from 'jwt-decode';
 
 const API_URL = 'http://10.80.0.89:3000';
 
-//const API_URL = 'http://192.168.100.13:3000';
+// const API_URL = 'http://192.168.67.242:3000';
 
 type AuthResponse = {
   message: string;
@@ -137,7 +137,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setLoading(true);
       setError(null);
 
-      const response = await fetch(`${API_URL}/users`, {
+      const response = await fetch(`${API_URL}/user`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

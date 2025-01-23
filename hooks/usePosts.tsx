@@ -8,7 +8,7 @@ import { Alert } from 'react-native';
 import { jwtDecode } from 'jwt-decode';
 
 const API_URL = 'http://10.80.0.89:3000/posts';
-// const API_URL = 'http://192.168.100.13:3000/posts';
+// const API_URL = 'http://192.168.67.242:3000/posts';
 
 type LocationType = {
     latitude: number;

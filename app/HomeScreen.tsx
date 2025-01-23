@@ -7,15 +7,20 @@ import {
   StyleSheet,
   ActivityIndicator,
   RefreshControl,
+  Alert,
+  TouchableOpacity,
+  Modal,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { usePosts } from '@/hooks/usePosts';
+import { Linking } from 'react-native';
 
 interface User {
   id: number;
   name: string;
   lastname: string;
   username: string;
+  phone: string;
 }
 
 interface Post {
@@ -34,6 +39,59 @@ interface Post {
 
 const PostCard: React.FC<{ post: Post }> = ({ post }) => {
   const [locationName, setLocationName] = React.useState<string>('');
+  const [showContactModal, setShowContactModal] = React.useState(false);
+
+  const [lastTap, setLastTap] = React.useState<number | null>(null);
+
+  // Función para manejar el doble toque en la imagen
+  const handleImageDoublePress = () => {
+    if (post.user.phone) {
+      setShowContactModal(true);
+    } else {
+      Alert.alert('Información', 'No hay número de contacto disponible');
+    }
+  };
+
+  // Función para llamar directamente
+  const handleCall = () => {
+    if (post.user.phone) {
+      Linking.openURL(`tel:${post.user.phone}`);
+      setShowContactModal(false);
+    }
+  };
+
+  const handleDoubleTap = () => {
+    const now = Date.now();
+    if (lastTap && (now - lastTap) < 300) {
+      // Es un doble toque
+      if (post.user.phone) {
+        setShowContactModal(true);
+      } else {
+        Alert.alert('Información', 'No hay número de contacto disponible');
+      }
+    }
+    setLastTap(now);
+  };
+
+  // Función para enviar WhatsApp
+  const handleWhatsApp = () => {
+    if (post.user.phone) {
+      const phoneNumber = post.user.phone.replace(/[^\d]/g, '');
+      const url = `whatsapp://send?phone=${phoneNumber}`;
+      Linking.canOpenURL(url)
+        .then((supported) => {
+          if (supported) {
+            return Linking.openURL(url);
+          } else {
+            Alert.alert('Error', 'WhatsApp no está instalado');
+          }
+        })
+        .catch(() => {
+          Alert.alert('Error', 'No se pudo abrir WhatsApp');
+        });
+      setShowContactModal(false);
+    }
+  };
 
   const formatDate = (dateString: string) => {
     const options: Intl.DateTimeFormatOptions = {
@@ -126,16 +184,52 @@ const PostCard: React.FC<{ post: Post }> = ({ post }) => {
       )}
       {/* Imagen */}
       {post.image && (
-        <Image
-          source={{
-            uri: post.image.startsWith('data:')
-              ? post.image
-              : `data:image/jpeg;base64,${post.image}`,
-          }}
-          style={styles.image}
-          resizeMode="cover"
-        />
+        <TouchableOpacity 
+          onPress={handleDoubleTap}
+        >
+          <Image
+            source={{
+              uri: post.image.startsWith('data:')
+                ? post.image
+                : `data:image/jpeg;base64,${post.image}`,
+            }}
+            style={styles.image}
+            resizeMode="cover"
+          />
+        </TouchableOpacity>
       )}
+      <Modal
+        transparent={true}
+        visible={showContactModal}
+        animationType="slide"
+        onRequestClose={() => setShowContactModal(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.contactModal}>
+            <Text style={styles.contactModalTitle}>Contactar</Text>
+            <TouchableOpacity
+              style={styles.contactOption}
+              onPress={handleCall}
+            >
+              <Ionicons name="call" size={24} color="#4c00b0" />
+              <Text style={styles.contactOptionText}>Llamar</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.contactOption}
+              onPress={handleWhatsApp}
+            >
+              <Ionicons name="logo-whatsapp" size={24} color="#4CAF50" />
+              <Text style={styles.contactOptionText}>WhatsApp</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.contactOption, styles.cancelOption]}
+              onPress={() => setShowContactModal(false)}
+            >
+              <Text style={styles.cancelOptionText}>Cancelar</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -320,6 +414,47 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '600',
     color: '#000',
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  contactModal: {
+    width: '80%',
+    backgroundColor: 'white',
+    borderRadius: 10,
+    padding: 20,
+    alignItems: 'center',
+  },
+  contactModalTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 20,
+    color: '#4c00b0',
+  },
+  contactOption: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+    paddingVertical: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#e0e0e0',
+  },
+  contactOptionText: {
+    marginLeft: 10,
+    fontSize: 16,
+    color: '#333',
+  },
+  cancelOption: {
+    borderBottomWidth: 0,
+  },
+  cancelOptionText: {
+    color: '#FF0000',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 

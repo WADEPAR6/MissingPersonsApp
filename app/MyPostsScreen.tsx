@@ -15,7 +15,6 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { usePosts } from '@/hooks/usePosts';
-import { useNavigation } from '@react-navigation/native';
 import EditPostModal from '@/components/EditPostModal';
 
 // Definición de interfaces

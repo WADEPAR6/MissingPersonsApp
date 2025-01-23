@@ -5,7 +5,7 @@ import { useAuth } from './useAuth';
 import { Alert } from 'react-native';
 
 const API_URL = 'http://10.80.0.89:3000/posts';
-// const API_URL = 'http://192.168.100.13:3000/posts';
+// const API_URL = 'http://192.168.67.242:3000/posts';
 
 export interface NearbyPost {
   id: number;
