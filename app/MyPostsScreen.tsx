@@ -151,7 +151,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, onDelete, onEdit }) => {
       )}
 
       <View style={styles.actionButtons}>
-        <TouchableOpacity style={styles.editButton} onPress={handleEdit}>
+        <TouchableOpacity style={styles.editButton} onPress={handleEdit}   testID="edit-button"        >
           <Ionicons name="pencil" size={20} color="#fff" />
           <Text style={styles.buttonText}>Editar</Text>
         </TouchableOpacity>

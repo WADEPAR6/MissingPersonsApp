@@ -59,6 +59,7 @@ export default function AuthScreen() {
         onChangeText={(text) => setLoginData(prev => ({ ...prev, email: text }))}
         keyboardType="email-address"
         autoCapitalize="none"
+        testID='input-email'
       />
       <TextInput
         style={styles.input}
@@ -66,8 +67,9 @@ export default function AuthScreen() {
         value={loginData.password}
         onChangeText={(text) => setLoginData(prev => ({ ...prev, password: text }))}
         secureTextEntry
+        testID='input-password'
       />
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
+      <TouchableOpacity style={styles.button} onPress={handleLogin} testID='button-login'>
         <Text style={styles.buttonText}>Iniciar Sesión</Text>
       </TouchableOpacity>
     </View>
@@ -94,9 +96,10 @@ export default function AuthScreen() {
           keyboardType={field.type}
           secureTextEntry={field.secure}
           autoCapitalize={field.type === 'email-address' ? 'none' : 'sentences'}
+          testID={`input-${field.key}`}
         />
       ))}
-      <TouchableOpacity style={styles.button} onPress={handleRegister}>
+      <TouchableOpacity style={styles.button} onPress={handleRegister} testID='button-register'>
         <Text style={styles.buttonText}>Registrarse</Text>
       </TouchableOpacity>
     </View>

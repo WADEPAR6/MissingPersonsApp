@@ -15,7 +15,7 @@ export default function AppNavigator() {
     if (loading) {
         return (
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                <ActivityIndicator size="large" color="#4c00b0" />
+                <ActivityIndicator size="large" color="#4c00b0" testID="loading-indicator"  />
             </View>
         );
     }
