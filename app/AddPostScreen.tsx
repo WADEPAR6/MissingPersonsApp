@@ -258,6 +258,8 @@ export default function AddPostScreen() {
             style={[styles.submitButton, (!description.trim() || !location) && styles.submitButtonDisabled]}
             onPress={handleCreatePost}
             disabled={!description.trim() || !location || loading}
+            testID="publish-button"
+
           >
             {loading ? (
               <ActivityIndicator color="#fff" />
@@ -275,6 +277,7 @@ export default function AddPostScreen() {
       >
         <View style={styles.modalContainer}>
           <MapView
+            testID="map-view"
             style={styles.map}
             initialRegion={{
               latitude: location?.latitude || 19.4326,
@@ -286,6 +289,7 @@ export default function AddPostScreen() {
           >
             {location && (
               <Marker
+                testID="map-marker"
                 coordinate={location}
                 title="Ubicación seleccionada"
               />

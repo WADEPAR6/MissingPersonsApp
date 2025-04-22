@@ -24,7 +24,7 @@ type LoginCredentials = {
   password: string;
 };
 
-type RegisterData = {
+export type RegisterData = {
   name: string;
   lastname: string;
   address: string;
