@@ -113,5 +113,6 @@ export const useNearbyPosts = () => {
     fetchNearbyPosts,
     refreshPosts,
     getCurrentLocation,
+    requestLocationPermission,
   };
 };
